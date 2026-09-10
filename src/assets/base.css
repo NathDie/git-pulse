@@ -1,6 +1,9 @@
 :root {
   --background: #f8fafe;
   --foreground: #0e1624;
+  --mutted-foreground: #61728F;
   --primary: #155dfc;
+  --primary-10: #2554e91a;
   --border: #d6dfec;
+  --white: #fff;
 }

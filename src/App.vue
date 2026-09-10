@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useBloodPressure } from '@/composables/useBloodPressure';
+import LoaderLogo from "@/components/ui/elements/LoaderLogo.vue";
+import Header from '@/components/ui/Header.vue';
+import BloodPressure from '@/components/form/BloodPressure.vue';
 
-const { entries, latest, isLoading, error, fetchAll, fetchLatest, createEntry } = useBloodPressure();
+const { entries, latest, isLoading, fetchAll, fetchLatest } = useBloodPressure();
 
 onMounted(() => {
   fetchAll();
@@ -11,17 +14,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-  </header>
-
+  <LoaderLogo v-if="isLoading" />
+  <Header :latest-blood-pressure="latest" />
   <main>
-    <p v-if="isLoading">Chargement...</p>
-    <p v-if="error">{{ error }}</p>
-    <div v-if="latest">Dernière mesure : {{ latest.date }}</div>
-    <ul>
-      <li v-for="entry in entries" :key="entry.id">{{ entry.date }}</li>
-    </ul>
+    <BloodPressure />
   </main>
 </template>
 
