@@ -1,17 +1,27 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { useBloodPressure } from '@/composables/useBloodPressure';
+
+const { entries, latest, isLoading, error, fetchAll, fetchLatest, createEntry } = useBloodPressure();
+
+onMounted(() => {
+  fetchAll();
+  fetchLatest();
+});
 </script>
 
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
   </header>
 
   <main>
-    <TheWelcome />
+    <p v-if="isLoading">Chargement...</p>
+    <p v-if="error">{{ error }}</p>
+    <div v-if="latest">Dernière mesure : {{ latest.date }}</div>
+    <ul>
+      <li v-for="entry in entries" :key="entry.id">{{ entry.date }}</li>
+    </ul>
   </main>
 </template>
 
