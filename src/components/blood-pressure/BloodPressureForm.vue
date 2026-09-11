@@ -21,6 +21,10 @@ const readings = ref<Reading[]>([
   { systolic: null, diastolic: null, pulse: null },
 ]);
 
+const emit = defineEmits<{
+  created: [];
+}>();
+
 async function submit() {
   isSubmitting.value = true;
   errorMessage.value = null;
@@ -34,7 +38,6 @@ async function submit() {
 
     await bloodPressureApi.create(payload);
 
-    // reset du formulaire après succès
     date.value = '';
     moment.value = Moment.MORNING;
     readings.value = [
@@ -42,6 +45,8 @@ async function submit() {
       { systolic: null, diastolic: null, pulse: null },
       { systolic: null, diastolic: null, pulse: null },
     ];
+
+    emit('created');
   } catch (e) {
     errorMessage.value = e instanceof Error ? e.message : 'Une erreur est survenue.';
   } finally {

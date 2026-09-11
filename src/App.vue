@@ -9,18 +9,20 @@ import BloodPressureLatest from "@/components/blood-pressure/BloodPressureLatest
 
 const { entries, latestEntries, latest, isLoading, fetchAll, fetchLatestEntry, fetchLatest } = useBloodPressure();
 
-onMounted(() => {
+function refreshAll() {
   fetchAll();
   fetchLatest();
   fetchLatestEntry();
-});
+}
+
+onMounted(refreshAll);
 </script>
 
 <template>
   <LoaderLogo v-if="isLoading" />
   <Header :latest-blood-pressure="latest" />
   <main>
-    <BloodPressureForm />
+    <BloodPressureForm @created="refreshAll" />
     <BloodPressureChart :blood-pressures="entries" />
     <BloodPressureLatest :blood-pressures="latestEntries" />
   </main>
