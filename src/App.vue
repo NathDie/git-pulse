@@ -3,7 +3,8 @@ import { onMounted } from 'vue';
 import { useBloodPressure } from '@/composables/useBloodPressure';
 import LoaderLogo from "@/components/ui/elements/LoaderLogo.vue";
 import Header from '@/components/ui/Header.vue';
-import BloodPressure from '@/components/form/BloodPressure.vue';
+import BloodPressureForm from '@/components/blood-pressure/BloodPressureForm.vue';
+import BloodPressureChart from "@/components/blood-pressure/BloodPressureChart.vue";
 
 const { entries, latest, isLoading, fetchAll, fetchLatest } = useBloodPressure();
 
@@ -17,7 +18,8 @@ onMounted(() => {
   <LoaderLogo v-if="isLoading" />
   <Header :latest-blood-pressure="latest" />
   <main>
-    <BloodPressure />
+    <BloodPressureForm />
+    <BloodPressureChart />
   </main>
 </template>
 
