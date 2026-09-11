@@ -95,4 +95,8 @@ table {
 #app {
     min-height: 100vh;
     isolation: isolate;
+
+    main {
+        padding: 1rem 0;
+    }
 }

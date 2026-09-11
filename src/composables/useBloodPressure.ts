@@ -4,6 +4,7 @@ import type { BloodPressureEntry, CreateBloodPressureEntryPayload } from '@/mode
 
 export function useBloodPressure() {
     const entries = ref<BloodPressureEntry[]>([]);
+    const latestEntries = ref<BloodPressureEntry[]>([]);
     const latest = ref<BloodPressureEntry | null>(null);
     const isLoading = ref(false);
     const error = ref<string | null>(null);
@@ -28,6 +29,14 @@ export function useBloodPressure() {
         }
     }
 
+    async function fetchLatestEntry() {
+        try {
+            latestEntries.value = await bloodPressureApi.getLatestEntry();
+        } catch (e) {
+            error.value = e instanceof Error ? e.message : 'Erreur inconnue';
+        }
+    }
+
     async function createEntry(payload: CreateBloodPressureEntryPayload) {
         const created = await bloodPressureApi.create(payload);
         entries.value.unshift(created);
@@ -35,5 +44,5 @@ export function useBloodPressure() {
         return created;
     }
 
-    return { entries, latest, isLoading, error, fetchAll, fetchLatest, createEntry };
+    return { entries, latest, latestEntries, isLoading, error, fetchAll, fetchLatest, fetchLatestEntry, createEntry };
 }

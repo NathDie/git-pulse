@@ -5,12 +5,14 @@ import LoaderLogo from "@/components/ui/elements/LoaderLogo.vue";
 import Header from '@/components/ui/Header.vue';
 import BloodPressureForm from '@/components/blood-pressure/BloodPressureForm.vue';
 import BloodPressureChart from "@/components/blood-pressure/BloodPressureChart.vue";
+import BloodPressureLatest from "@/components/blood-pressure/BloodPressureLatest.vue";
 
-const { entries, latest, isLoading, fetchAll, fetchLatest } = useBloodPressure();
+const { entries, latestEntries, latest, isLoading, fetchAll, fetchLatestEntry, fetchLatest } = useBloodPressure();
 
 onMounted(() => {
   fetchAll();
   fetchLatest();
+  fetchLatestEntry();
 });
 </script>
 
@@ -19,7 +21,8 @@ onMounted(() => {
   <Header :latest-blood-pressure="latest" />
   <main>
     <BloodPressureForm />
-    <BloodPressureChart />
+    <BloodPressureChart :blood-pressures="entries" />
+    <BloodPressureLatest :blood-pressures="latestEntries" />
   </main>
 </template>
 

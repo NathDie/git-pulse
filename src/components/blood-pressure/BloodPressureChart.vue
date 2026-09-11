@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, computed} from 'vue';
+import {computed} from 'vue';
 import {Line} from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -11,16 +11,13 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
-import {bloodPressureApi} from '@/services/bloodPressureApi';
 import type {BloodPressureEntry} from '@/models/bloodPressure';
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
 
-const entries = ref<BloodPressureEntry[]>([]);
-
-onMounted(async () => {
-  entries.value = await bloodPressureApi.getAll();
-});
+const props = defineProps<{
+  bloodPressures: BloodPressureEntry[] | null | undefined
+}>()
 
 function formatEntryLabel(entry: BloodPressureEntry): string {
   const date = new Date(entry.date);
@@ -29,25 +26,25 @@ function formatEntryLabel(entry: BloodPressureEntry): string {
 }
 
 const chartData = computed(() => ({
-  labels: entries.value.map(formatEntryLabel),
+  labels: props.bloodPressures?.map(formatEntryLabel),
   datasets: [
     {
       label: 'Moy. SYS',
-      data: entries.value.map((e) => e.average_systolic),
+      data: props.bloodPressures?.map((e) => e.average_systolic),
       borderColor: '#155dfc',
       backgroundColor: '#155dfc',
       tension: 0.3,
     },
     {
       label: 'Moy. DIA',
-      data: entries.value.map((e) => e.average_diastolic),
+      data: props.bloodPressures?.map((e) => e.average_diastolic),
       borderColor: '#00a153',
       backgroundColor: '#00a153',
       tension: 0.3,
     },
     {
       label: 'Moy. PUL',
-      data: entries.value.map((e) => e.average_pulse),
+      data: props.bloodPressures?.map((e) => e.average_pulse),
       borderColor: '#fe9a00',
       backgroundColor: '#fe9a00',
       tension: 0.3,
