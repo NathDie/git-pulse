@@ -54,9 +54,15 @@ const formatDate = (dateString: string | undefined): string => {
 <style scoped lang="scss">
 header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    align-items: center;
+    flex-direction: row;
+  }
 
   .left-side {
     display: flex;
