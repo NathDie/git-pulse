@@ -5,6 +5,12 @@ export interface BloodPressureReading {
     pulse: number;
 }
 
+export interface BloodPressureReadingCreate {
+    systolic: number | null;
+    diastolic: number | null;
+    pulse: number | null;
+}
+
 export interface BloodPressureEntry {
     id: number;
     date: string;
@@ -15,7 +21,9 @@ export interface BloodPressureEntry {
     readings: BloodPressureReading[];
 }
 
+
 export interface CreateBloodPressureEntryPayload {
     date: string;
-    readings: BloodPressureReading[];
+    moment: string
+    readings: BloodPressureReadingCreate[];
 }

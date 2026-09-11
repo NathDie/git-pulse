@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {Moment, momentLabel} from '@/enums/moment';
+import { ref } from 'vue';
+import { Moment, momentLabel } from '@/enums/moment';
+import { bloodPressureApi } from '@/services/bloodPressureApi.ts';
+import Loader from '@/components/ui/elements/Loader.vue';
 
 interface Reading {
   systolic: number | null;
@@ -10,20 +12,41 @@ interface Reading {
 
 const date = ref<string>('');
 const moment = ref<Moment>(Moment.MORNING);
+const isSubmitting = ref(false);
+const errorMessage = ref<string | null>(null);
 
 const readings = ref<Reading[]>([
-  {systolic: null, diastolic: null, pulse: null},
-  {systolic: null, diastolic: null, pulse: null},
-  {systolic: null, diastolic: null, pulse: null},
+  { systolic: null, diastolic: null, pulse: null },
+  { systolic: null, diastolic: null, pulse: null },
+  { systolic: null, diastolic: null, pulse: null },
 ]);
 
-function submit() {
-  const payload = {
-    date: date.value,
-    moment: moment.value,
-    readings: readings.value,
-  };
-  // appel à bloodPressureApi.create(payload)
+async function submit() {
+  isSubmitting.value = true;
+  errorMessage.value = null;
+
+  try {
+    const payload = {
+      date: date.value,
+      moment: moment.value,
+      readings: readings.value,
+    };
+
+    await bloodPressureApi.create(payload);
+
+    // reset du formulaire après succès
+    date.value = '';
+    moment.value = Moment.MORNING;
+    readings.value = [
+      { systolic: null, diastolic: null, pulse: null },
+      { systolic: null, diastolic: null, pulse: null },
+      { systolic: null, diastolic: null, pulse: null },
+    ];
+  } catch (e) {
+    errorMessage.value = e instanceof Error ? e.message : 'Une erreur est survenue.';
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
@@ -100,13 +123,18 @@ function submit() {
         </fieldset>
       </div>
       <div class="actions">
-        <button type="submit">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M12 5v14"></path>
-          </svg>
-          Enregistrer les mesures
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
+        <button type="submit" :disabled="isSubmitting">
+          <Loader v-if="isSubmitting" />
+          <template v-else>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="M12 5v14"></path>
+            </svg>
+            Enregistrer les mesures
+          </template>
         </button>
       </div>
     </form>
