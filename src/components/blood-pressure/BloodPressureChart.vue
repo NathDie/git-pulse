@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import {computed} from 'vue';
+<script setup lang="ts"> import {computed} from 'vue';
 import {Line} from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -11,79 +10,66 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
+import type {ChartData, ChartOptions} from 'chart.js';
 import type {BloodPressureEntry} from '@/models/bloodPressure';
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
-
-const props = defineProps<{
-  bloodPressures: BloodPressureEntry[] | null | undefined
-}>()
+ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale,);
+const props = defineProps<{ bloodPressures: BloodPressureEntry[] | null | undefined }>()
 
 function formatEntryLabel(entry: BloodPressureEntry): string {
   const date = new Date(entry.date);
-  const shortDate = new Intl.DateTimeFormat('fr-FR', {day: '2-digit', month: '2-digit'}).format(date);
+  const shortDate = new Intl.DateTimeFormat('fr-FR', {day: '2-digit', month: '2-digit',}).format(date);
   return `${shortDate} - ${entry.moment}`;
 }
 
-const chartData = computed(() => ({
-  labels: props.bloodPressures?.map(formatEntryLabel),
-  datasets: [
-    {
+const chartData = computed<ChartData<'line'>>(() => {
+  const bloodPressures = props.bloodPressures ?? [];
+  return {
+    labels: bloodPressures.map(formatEntryLabel),
+    datasets: [{
       label: 'Moy. SYS',
-      data: props.bloodPressures?.map((e) => e.average_systolic),
+      data: bloodPressures.map((e) => e.average_systolic),
       borderColor: '#155dfc',
       backgroundColor: '#155dfc',
       tension: 0.3,
-    },
-    {
+    }, {
       label: 'Moy. DIA',
-      data: props.bloodPressures?.map((e) => e.average_diastolic),
+      data: bloodPressures.map((e) => e.average_diastolic),
       borderColor: '#00a153',
       backgroundColor: '#00a153',
       tension: 0.3,
-    },
-    {
+    }, {
       label: 'Moy. PUL',
-      data: props.bloodPressures?.map((e) => e.average_pulse),
+      data: bloodPressures.map((e) => e.average_pulse),
       borderColor: '#fe9a00',
       backgroundColor: '#fe9a00',
       tension: 0.3,
-    },
-  ],
-}));
-
-const chartOptions = {
+    },],
+  };
+});
+const chartOptions: ChartOptions<'line'> = {
   responsive: true,
   maintainAspectRatio: false,
-  scales: {
-    y: {
-      min: 30,
-      max: 200,
-    },
-  },
+  scales: {y: {min: 30, max: 200,},},
   plugins: {
     tooltip: {
       callbacks: {
-        title: (items: any[]) => items[0]?.label ?? '',
-        label: (item: any) => `${item.dataset.label} : ${item.formattedValue}`,
+        title: (items) => items[0]?.label ?? '',
+        label: (item) => `${item.dataset.label} : ${item.formattedValue}`,
       },
     },
   },
-};
-</script>
-
+}; </script>
 <template>
   <div class="blood-pressure-chart-container">
     <div class="header">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-           class="lucide lucide-trending-up h-5 w-5 text-primary" aria-hidden="true"
-           data-tsd-source="/src/routes/index.tsx:359:13">
+           class="lucide lucide-trending-up h-5 w-5 text-primary" aria-hidden="true">
         <path d="M16 7h6v6"></path>
         <path d="m22 7-8.5 8.5-5-5L2 17"></path>
       </svg>
-      <span>Évolution des moyennes</span>
-    </div>
+      <span>Évolution des moyennes</span></div>
     <div class="container">
       <Line :data="chartData" :options="chartOptions"/>
     </div>
