@@ -1,42 +1,63 @@
-# git-pulse
+# Git Pulse
 
-This template should help get you started developing with Vue 3 in Vite.
+A blood pressure tracking app, built to address a personal need for regular monitoring following heart-related health issues.
 
-## Recommended IDE Setup
+No more volatile paper notebooks: Git Pulse lets you log your readings, track their evolution over time, and view your averages at a glance.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+This repository contains the **frontend** part of the project. It consumes an API built with Symfony (API Platform), which is part of a private dashboard grouping several personal applications — this backend is therefore not public.
 
-## Recommended Browser Setup
+## Features
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Log 3 blood pressure readings per entry (morning, noon, evening, night)
+- Automatic average calculation per entry and across the full history
+- Evolution chart of readings over time
+- Detailed history of recent entries
 
-## Type Support for `.vue` Imports in TS
+## Tech stack
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Vue 3 (Composition API, `<script setup>`)
+- TypeScript
+- Chart.js (via vue-chartjs) for the evolution charts
+- SCSS for component styling
 
-## Customize configuration
+## Project structure
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+.
+├── components/
+│   └── blood-pressure/
+│       ├── BloodPressureForm.vue
+│       ├── BloodPressureChart.vue
+│       └── BloodPressureLatest.vue
+├── composables/
+│   └── useBloodPressure.ts
+├── services/
+│   ├── apiClient.ts
+│   └── bloodPressureApi.ts
+├── models/
+│   └── bloodPressure.ts
+└── enums/
+    └── moment.ts
 ```
 
-### Compile and Hot-Reload for Development
+## Installation
 
-```sh
+```bash
+npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Copy `.env.sample` to `.env` and configure the API connection variables:
 
-```sh
-npm run build
+```env
+VITE_API_BASE_URL=https://api.example.com
+VITE_API_TOKEN=your_api_token_here
 ```
+
+## Context
+
+This module is part of a larger personal project. The frontend code is shared here as an example, for others with similar personal health-tracking needs.
+
+## License
+
+MIT
