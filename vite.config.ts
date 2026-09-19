@@ -17,6 +17,7 @@ export default defineConfig({
   },
 
   build: {
+    cssTarget: 'chrome100',
     lib: {
       entry: 'src/main.ts',
       formats: ['es'],
